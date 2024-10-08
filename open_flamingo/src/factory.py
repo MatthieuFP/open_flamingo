@@ -81,6 +81,17 @@ def create_model_and_transforms(
 
         extend_instance(lang_encoder, EmbeddingFnMixin)
 
+    elif "gemma-2b" in lang_encoder_path:
+
+        class EmbeddingFnMixin:
+            def get_input_embeddings(self):
+                return self.model.embed_tokens
+
+            def set_input_embeddings(self, new_embeddings):
+                self.model.embed_tokens = new_embeddings
+
+        extend_instance(lang_encoder, EmbeddingFnMixin)
+
     # convert LM to FlamingoLM
     extend_instance(lang_encoder, FlamingoLMMixin)
 
@@ -138,4 +149,5 @@ __KNOWN_DECODER_LAYERS_ATTR_NAMES = {
     "gptneoxforcausallm": "gpt_neox.layers",
     "mpt": "transformer.blocks",
     "mosaicgpt": "transformer.blocks",
+    "gemmaforcausallm": "model.layers",
 }
